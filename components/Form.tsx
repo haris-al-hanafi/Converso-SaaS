@@ -23,10 +23,12 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { subjects } from "@/constants"
+import { createCompanion } from "@/lib/actions/companion.action"
+import { redirect } from 'next/navigation';
 
 
 const formSchema = z.object({
-    username: z.string().min(2, {
+    name: z.string().min(2, {
         message: "Username must be at least 2 characters.",
     }),
     subject: z.string().min(1, { message: "Subject is required" }),
@@ -43,7 +45,7 @@ export function CompForm() {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            username: "",
+            name: "",
             subject: "",
             topic: "",
             voice: "",
@@ -51,8 +53,17 @@ export function CompForm() {
             duration: 15,
         },
     })
-    const onSubmit = (data: z.infer<typeof formSchema>) => {
-        console.log(data)
+    const onSubmit = async (data: z.infer<typeof formSchema>) => {
+        const companion = await createCompanion(data);
+
+        if(companion){
+            redirect(`/companions/${companion.id}`);
+    
+        }else{
+            console.log("Failed to create companion");
+            redirect('/')
+            
+        }
     }
 
     return (
@@ -60,7 +71,7 @@ export function CompForm() {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                 <FormField
                     control={form.control}
-                    name="username"
+                    name="name"
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Companion Name</FormLabel>
