@@ -2,6 +2,7 @@ import React from 'react'
 import CompCard from '../components/CompCard'
 import CompLists from '@/components/CompLists'
 import CTA from '@/components/CTA'
+import { recentSessions } from '@/constants';
 
 function getRandomColor() {
   const hue = Math.floor(Math.random() * 360);        // Full color range
@@ -46,7 +47,11 @@ const Page = () => {
         
       </section>
       <section className='home-section'>
-        <CompLists />
+        <CompLists 
+          title="Recently Completed Lessons"
+          companions={recentSessions}
+          classNames="md:w-2/3 max-w-full"
+        />
         <CTA />
       </section>
     </main>
