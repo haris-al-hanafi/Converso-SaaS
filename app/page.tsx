@@ -3,49 +3,27 @@ import CompCard from '../components/CompCard'
 import CompLists from '@/components/CompLists'
 import CTA from '@/components/CTA'
 import { recentSessions } from '@/constants';
+import { getAllComaponions } from '@/lib/actions/companion.action';
+import { getSubjectColor } from '@/lib/utils'
 
-function getRandomColor() {
-  const hue = Math.floor(Math.random() * 360);        // Full color range
-  const saturation = 100;                             // Full color for vibrancy
-  const lightness = Math.floor(Math.random() * 20) + 70; // Light: 70%–90%
-  return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-}
+export const dynamic = 'force-dynamic' // optional: for dynamic data fetching in Next.js
 
-
-console.log(getRandomColor()); // Example: #3E2F1B
-
-
-const Page = () => {
+const Page = async () => {
+  const companions = await getAllComaponions({});
 
   return (
-    <main className=''>
-      <h1>Popular Companions</h1>
-      <section className='home-section'>
-        <CompCard 
-          id={1}
-          name="Neurology"
-          topic="Introduction to Neurology"
-          subject="Science"
-          duration="45"
-          color={getRandomColor()}
-        />
-        <CompCard 
-          id={1}
-          name="Neurology"
-          topic="Introduction to Neurology"
-          subject="Science"
-          duration="45"
-          color={getRandomColor()}
-        /><CompCard 
-          id={1}
-          name="Neurology"
-          topic="Introduction to Neurology"
-          subject="Science"
-          duration="45"
-          color={getRandomColor()}
-        />
-        
+    <main className='home-section'>
+      <h1>Recently created</h1>
+      <section className='companions-grid'>
+        {companions.slice(0, 3).map((companion) => (
+          <CompCard
+            key={companion.id}
+            {...companion}
+            color={getSubjectColor(companion.subject)}
+          />
+        ))}
       </section>
+
       <section className='home-section'>
         <CompLists 
           title="Recently Completed Lessons"

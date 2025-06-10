@@ -12,6 +12,7 @@ const Companions = async ({searchParams}: SearchParams) => {
 
   const companions = await getAllComaponions({subject, topic})
   
+  
   return (
     <main className='flex flex-col items-center justify-center'>
       <section className='flex  max-sm:flex-col justify-between items-center w-full'>

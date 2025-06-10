@@ -6,6 +6,7 @@ import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import Lottie, { LottieRefCurrentProps } from "lottie-react";
 import soundwaves from "@/constants/soundwaves.json";
+import { addToSessionHistory } from "@/lib/actions/companion.action";
 
 // Enum representing the different call states
 enum CallStatus {
@@ -46,7 +47,11 @@ const CompComponent = ({
 
   useEffect(() => {
     const onCall = () => setCallStatus(CallStatus.ACTIVE);
-    const endCall = () => setCallStatus(CallStatus.ENDED);
+    const endCall = () => {
+      setCallStatus(CallStatus.ENDED);
+
+      addToSessionHistory(companionID)
+    }
     const startConnecting = () => setCallStatus(CallStatus.CONNECTING);
     const onMessage = (message: Message) => {
       if (message.type === "transcript" && message.transcriptType === "final") {
@@ -180,7 +185,9 @@ const CompComponent = ({
                   height={32}
                   className="max-sm:hidden"
                 />
-                {isMuted ? "TURN ON MIC" : "TURN OFF MIC"}
+                <p>
+                  {isMuted ? "TURN ON MIC" : "TURN OFF MIC"}
+                </p>
               </button>
               <button
                 className={cn(
@@ -213,12 +220,12 @@ const CompComponent = ({
           {messages.map((message, index) => (
             <h1 key={index}>
               {message.role === "assistant"
-                ? `${name} : ${message.content}`
+                ? `${name.split(" ")[0].replace(/[,.]/g, "")} : ${message.content}`
                 : `${userName} : ${message.content}`}
             </h1>
           ))}
         </div>
-        <div className="transcript-fade" />
+        {/* <div className="transcript-fade" /> */}
       </section>
     </section>
   );
