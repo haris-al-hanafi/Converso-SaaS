@@ -11,7 +11,7 @@ import {
 
 const Navbar = () => {
   return (
-    <nav className='navbar'>
+    <nav className='navbar max-md:flex-col max-md:justify-center'>
       {/* Logo Section */}
       <Link href="/" className='flex items-center'>
         <Image

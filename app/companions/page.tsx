@@ -11,8 +11,6 @@ const Companions = async ({searchParams}: SearchParams) => {
   const topic = filters.topic ? filters.topic : '';
 
   const companions = await getAllComaponions({subject, topic})
-  console.log('Companions:', companions);
-  
   
   return (
     <main className='flex flex-col items-center justify-center'>

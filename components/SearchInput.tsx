@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { formUrlQuery } from '@jsmastery/utils'
+import { formUrlQuery, removeKeysFromUrlQuery } from '@jsmastery/utils'
 
 
 const SearchInput = () => {
@@ -14,7 +14,8 @@ const SearchInput = () => {
     const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(() => {
-        if (searchQuery) {
+        const delayDebounceFn = setTimeout(()=>{
+            if (searchQuery) {
             const newUrl = formUrlQuery({
                 params: searchParams.toString(),
                 key: "topic",
@@ -22,7 +23,18 @@ const SearchInput = () => {
             });
             router.push(newUrl, {
                 scroll: false,})
+        }else if(pathname === '/companions') {
+            // If the search query is empty and we are on the companions page, reset the topic filter
+            const newUrl = removeKeysFromUrlQuery({
+                params: searchParams.toString(),
+                keysToRemove: ['topic'],
+            })
+            router.push(newUrl, {
+                scroll: false,
+            });
         }
+        }, 500)
+        
     }, [searchQuery, router, searchParams, pathname])
 
     return (
